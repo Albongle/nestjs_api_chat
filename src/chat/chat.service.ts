@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ChatDocument } from './chat.model';
+import { ChatDocument } from './chat.schema';
 import { Model } from 'mongoose';
-import { ChatDTO, ChatResponse } from './chat.dto';
 import { plainToInstance } from 'class-transformer';
+import { Chat, ChatResponse } from './chat.model';
 
 @Injectable()
 export class ChatService {
@@ -12,7 +12,7 @@ export class ChatService {
     private readonly chatModel: Model<ChatDocument>,
   ) {}
 
-  public async getAllChats(): Promise<ChatResponse> {
+  public async obtenerTodosLosChats(): Promise<ChatResponse> {
     const chats = await this.chatModel.find();
     return plainToInstance(
       ChatResponse,
@@ -21,8 +21,9 @@ export class ChatService {
     );
   }
 
-  public saveChat(chat: ChatDTO): Promise<ChatDocument> {
-    const createChat = new this.chatModel(chat);
-    return createChat.save();
+  public guardarChat(chat: Chat): Chat {
+    const nuevoChat = new this.chatModel(chat);
+    const chatCreado = nuevoChat.save();
+    return plainToInstance(Chat, chatCreado, { excludeExtraneousValues: true });
   }
 }
