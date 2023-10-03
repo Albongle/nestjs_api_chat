@@ -7,7 +7,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { Chat } from './chat.model';
+import { Conversacion } from 'src/types/conversacion';
 
 @Controller({ path: 'chat', version: ['1'] })
 export class ChatController {
@@ -40,7 +40,7 @@ export class ChatController {
   }
 
   @Post()
-  public guardarMensaje(@Body() nuevoChat: Chat) {
-    return this.chatService.guardarChat(nuevoChat);
+  public guardarMensaje(@Body() nuevaConversacion: Conversacion) {
+    return this.chatService.guardarChat(nuevaConversacion);
   }
 }
