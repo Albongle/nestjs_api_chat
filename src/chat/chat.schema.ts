@@ -1,19 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Usuario } from 'src/usuario/usuario.model';
+import { Mensaje } from 'src/types/mensaje';
+import { Usuario } from 'src/types/usuario';
 
 @Schema()
-export class ChatDocument extends Document {
+export class ConversacionDocument extends Document {
   @Prop({ required: true })
   emisor: Usuario;
 
   @Prop()
-  mensaje: string;
-  @Prop()
-  fechaEnvio: string;
-
+  mensaje: Mensaje;
   @Prop()
   receptor: Usuario;
 }
 
-export const ChatSchema = SchemaFactory.createForClass(ChatDocument);
+export const ConversacionSchema =
+  SchemaFactory.createForClass(ConversacionDocument);

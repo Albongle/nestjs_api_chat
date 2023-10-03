@@ -1,30 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ChatDocument } from './chat.schema';
+import { ConversacionDocument } from './chat.schema';
 import { Model } from 'mongoose';
 import { plainToInstance } from 'class-transformer';
-import { Chat, ChatResponse } from './chat.model';
+import { Chat } from './chat.model';
+import { Conversacion } from 'src/types/conversacion';
 
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectModel(ChatDocument.name)
-    private readonly chatModel: Model<ChatDocument>,
+    @InjectModel(ConversacionDocument.name)
+    private readonly chatModel: Model<ConversacionDocument>,
   ) {}
 
-  public async obtenerTodosLosChats(): Promise<ChatResponse> {
+  public async obtenerTodosLosChats(): Promise<Chat> {
     const chats = await this.chatModel.find().exec();
     return plainToInstance(
-      ChatResponse,
+      Chat,
       { chats: chats },
       { excludeExtraneousValues: true },
     );
   }
 
-  public guardarChat(chat: Chat): Chat {
+  public guardarChat(chat: Conversacion): Conversacion {
     const nuevoChat = new this.chatModel(chat);
     const chatCreado = nuevoChat.save();
-    return plainToInstance(Chat, chatCreado, { excludeExtraneousValues: true });
+    return plainToInstance(Conversacion, chatCreado, {
+      excludeExtraneousValues: true,
+    });
   }
 
   public obtenerChatsPorEmailEmisor(email: string) {
@@ -44,7 +47,7 @@ export class ChatService {
       .exec();
 
     return plainToInstance(
-      ChatResponse,
+      Chat,
       { chats: chats },
       { excludeExtraneousValues: true },
     );
@@ -57,7 +60,7 @@ export class ChatService {
     const chats = await this.chatModel.find({ [usuario]: email }).exec();
 
     return plainToInstance(
-      ChatResponse,
+      Chat,
       { chats: chats },
       { excludeExtraneousValues: true },
     );
